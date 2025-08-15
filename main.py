@@ -716,8 +716,7 @@ async def main(token: str, guild_id):
                         "fucked by %s",
                         "%s wizzed you ",
                         "%s was here",
-                        "Nuked by %s",
-                        ""]
+                        "Nuked by %s",]
                 names = [i % name for i in names]
 
             amount = amount if amount else 100
