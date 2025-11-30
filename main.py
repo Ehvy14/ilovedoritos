@@ -983,7 +983,7 @@ elif choice == "22":  # خيار حذف الرولات الخطرة
     
     return await back_to_manu()()
 
-        elif ch == "02":
+elif ch == "02":
             invite_link = Funcs.get_input("Enter your invite link: ", lambda x: x != "") if not invite_link else invite_link
             amount = round(amount / 2) if amount else 50
 
@@ -1011,15 +1011,14 @@ elif choice == "22":  # خيار حذف الرولات الخطرة
                 return await back_to_manu()
             
 
-        elif ch == "03":
+elif ch == "03":
             
             return await back_to_manu()
     
 
 
 
-
-    elif choice == "19":
+elif choice == "19":
         os._exit(69)
 
 
